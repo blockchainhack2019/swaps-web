@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo } from 'react'
 import { useConnect } from 'store'
 import socket from 'socket'
 
+import Avatar from 'components/Avatar/Avatar'
+
 import s from './OrderBook.scss'
 
 
@@ -37,16 +39,18 @@ const OrderBook = () => {
       <table className={s.items}>
         <thead>
         <tr>
+          <th />
           <th>Sell <span>{sellCurrency}</span></th>
           <th>Buy <span>{buyCurrency}</span></th>
           <th>Rate</th>
-          <th></th>
+          <th />
         </tr>
         </thead>
         <tbody>
         {
-          filteredOrders.map(({ id, sellAmount, buyAmount }) => (
+          filteredOrders.map(({ id, sellAmount, buyAmount, owner }) => (
             <tr key={id} className={s.item}>
+              <td><Avatar className={s.avatar} value={owner} /></td>
               <td>{sellAmount}</td>
               <td>{buyAmount}</td>
               <td>{(sellAmount / buyAmount).toFixed(7)}</td>

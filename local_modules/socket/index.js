@@ -2,8 +2,7 @@ import io from 'socket.io-client'
 
 
 let id
-// const socket = io('http://dribbbles.ru')
-const socket = io('http://localhost:3060')
+const socket = io(process.env.NODE_ENV === 'development' ? 'http://localhost:3060' : 'http://dribbbles.ru')
 const myEvents = [ 'connect', 'disconnect', 'login' ]
 
 const on = (event, callback) => {

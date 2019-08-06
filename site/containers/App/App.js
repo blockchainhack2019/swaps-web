@@ -1,22 +1,30 @@
-import React from 'react'
-import { StoreContext } from 'store'
-import store from 'redux/store'
-import 'socket'
+import React, { useState, useEffect } from 'react'
+import socket from 'socket'
 
 import { WidthContainer } from 'components/layout'
+import Avatar from 'components/Avatar/Avatar'
 
 import s from './App.scss'
 
 
+const App = ({ children }) => {
+  const [ peerId, setPeerId ] = useState(null)
 
+  useEffect(() => {
+    socket.on('login', ({ id }) => {
+      setPeerId(id)
+    })
+  }, [])
 
-const App = ({ children }) => (
-  <StoreContext.Provider value={store}>
-    <WidthContainer className={s.app}>
-      {children}
-    </WidthContainer>
-  </StoreContext.Provider>
-)
+  return (
+    <div className={s.app}>
+      <Avatar className={s.mainAvatar} value={peerId} />
+      <WidthContainer>
+        {children}
+      </WidthContainer>
+    </div>
+  )
+}
 
 
 export default App
