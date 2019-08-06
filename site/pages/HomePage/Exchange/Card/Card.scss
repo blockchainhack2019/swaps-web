@@ -1,0 +1,41 @@
+.card {
+  padding: 110px 50px 130px;
+  background-color: #fff;
+
+  &.secondary {
+    background-color: #f7f7f7;
+  }
+}
+
+.currency {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  padding-right: 24px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 24px;
+  color: #202442;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    border-top: 5px solid #202442;
+    border-right: 5px solid transparent;
+    border-left: 5px solid transparent;
+    border-bottom: 0;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    margin-top: -3px;
+  }
+}
+
+.input {
+  width: 240px;
+  font-size: 60px;
+  font-weight: 300;
+}

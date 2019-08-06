@@ -11,7 +11,7 @@ export default [
   {
     test: /images.*\.(svg)(\?.*)?$/,
     issuer: {
-      test: /\.jsx?$/,
+      test: /\.js$/,
     },
     use: [
       'babel-loader',

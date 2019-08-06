@@ -1,0 +1,13 @@
+.input {
+  background: none;
+  background-color: transparent;
+  padding-bottom: 5px;
+  border: 0;
+  border-bottom: 1px solid #ccc;
+  font-size: 18px;
+  transition: border-color 0.23s ease;
+
+  &:focus {
+    border-bottom-color: #aaa;
+  }
+}
