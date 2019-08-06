@@ -29,11 +29,8 @@ const webpackConfig = {
       /en-gb|es/
     ),
     new HtmlWebpackPlugin({
-      filename: process.env.NODE_ENV === 'development' ? 'index.html' : '_index.html',
+      filename: 'index.html',
       template: basePath('site/index.html'),
-      templateParameters: {
-        apiHost: process.env.NODE_ENV === 'development' ? 'http://local.borscht.com:3000' : '${API_URL}',
-      },
       inject: 'body',
     }),
   ],

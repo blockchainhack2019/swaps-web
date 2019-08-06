@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import Form from 'formular'
+import socket from 'socket'
 
 import Card from './Card/Card'
 
@@ -12,11 +13,11 @@ const exchangeRate = 3819.93
 
 const form = new Form({
   fields: {
-    from: {
+    sellAmount: {
       validate: [],
       value: 10,
     },
-    to: {
+    buyAmount: {
       validate: [],
       value: (10 / exchangeRate).toFixed(5),
     },
@@ -26,86 +27,92 @@ const form = new Form({
 const Exchange = () => {
   const [ state, setState ] = useState({
     exchangeRate,
-    from: {
-      currency: 'QTUM',
-    },
-    to: {
-      currency: 'BTC',
-    },
+    sellCurrency: 'QTUM',
+    buyCurrency: 'BTC',
   })
 
   useEffect(() => {
-    const handleFromChange = (value) => {
-      if (!form.fields.from.ignoreChange) {
-        form.fields.to.ignoreChange = true
-        form.fields.to.set((value / exchangeRate).toFixed(5))
+    let ignoreSellChanges
+    let ignoreBuyChanges
+
+    const handleSellChange = (value) => {
+      if (!ignoreSellChanges) {
+        ignoreBuyChanges = true
+        form.fields.buyAmount.set((value / exchangeRate).toFixed(5))
       }
       else {
-        form.fields.to.ignoreChange = false
+        ignoreBuyChanges = false
       }
     }
 
-    const handleToChange = (value) => {
-      if (!form.fields.to.ignoreChange) {
-        form.fields.from.ignoreChange = true
-        form.fields.from.set((value * exchangeRate).toFixed(5))
+    const handleBuyChange = (value) => {
+      if (!ignoreBuyChanges) {
+        ignoreSellChanges = true
+        form.fields.sellAmount.set((value * exchangeRate).toFixed(5))
       }
       else {
-        form.fields.from.ignoreChange = false
+        ignoreSellChanges = false
       }
     }
 
     const handleFocus = () => {
-      form.fields.from.ignoreChange = false
-      form.fields.to.ignoreChange = false
+      ignoreSellChanges = false
+      ignoreBuyChanges = false
     }
 
-    form.fields.from.on('change', handleFromChange)
-    form.fields.to.on('change', handleToChange)
-    form.fields.from.on('focus', handleFocus)
-    form.fields.to.on('focus', handleFocus)
+    form.fields.sellAmount.on('change', handleSellChange)
+    form.fields.buyAmount.on('change', handleBuyChange)
+    form.fields.sellAmount.on('focus', handleFocus)
+    form.fields.buyAmount.on('focus', handleFocus)
 
     return () => {
-      form.fields.from.off('change', handleFromChange)
-      form.fields.to.off('change', handleToChange)
-      form.fields.from.off('focus', handleFocus)
-      form.fields.to.off('focus', handleFocus)
+      form.fields.sellAmount.off('change', handleSellChange)
+      form.fields.buyAmount.off('change', handleBuyChange)
+      form.fields.sellAmount.off('focus', handleFocus)
+      form.fields.buyAmount.off('focus', handleFocus)
     }
   }, [ exchangeRate ])
 
   const handleSwapClick = useCallback(() => {
-    setState(({ exchangeRate, from, to }) => {
-
-      return {
-        exchangeRate: 1 / exchangeRate,
-        from: {
-          ...from,
-          currency: to.currency,
-        },
-        to: {
-          ...to,
-          currency: from.currency,
-        }
-      }
-    })
+    setState(({ exchangeRate, sellCurrency, buyCurrency }) => ({
+      exchangeRate: 1 / exchangeRate,
+      sellCurrency: buyCurrency,
+      buyCurrency: sellCurrency,
+    }))
 
     form.setValues({
-      from: form.fields.to.value,
-      to: form.fields.from.value,
+      sellAmount: form.fields.buyAmount.value,
+      buyAmount: form.fields.sellAmount.value,
     })
   }, [])
+
+  const handleSubmit = useCallback(() => {
+    form.submit()
+      .then(({ sellAmount, buyAmount }) => {
+        const { sellCurrency, buyCurrency } = state
+
+        socket.placeOrder({
+          sellCurrency,
+          sellAmount: Number(sellAmount),
+          buyCurrency,
+          buyAmount: Number(buyAmount),
+        })
+
+        form.unsetValues()
+      })
+  }, [ state ])
 
   const rate = state.exchangeRate.toFixed(8).replace(/0+$/, '')
 
   return (
     <div className={s.exchange}>
-      <div className={s.rate}>1 {state.to.currency} = {rate} {state.from.currency}</div>
+      <div className={s.rate}>1 {state.buyCurrency} = {rate} {state.sellCurrency}</div>
       <div className={s.swapButton} onClick={handleSwapClick}>
         <img src={swapIcon} />
       </div>
-      <Card className={s.from} field={form.fields.from} {...state.from} />
-      <Card className={s.to} field={form.fields.to} {...state.to} secondary />
-      <button className={s.submitButton}>Exchange</button>
+      <Card className={s.from} field={form.fields.sellAmount} currency={state.sellCurrency} />
+      <Card className={s.to} field={form.fields.buyAmount} currency={state.buyCurrency} secondary />
+      <button className={s.submitButton} onClick={handleSubmit}>Place Order</button>
     </div>
   )
 }

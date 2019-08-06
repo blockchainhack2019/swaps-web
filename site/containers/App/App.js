@@ -1,4 +1,5 @@
 import React from 'react'
+import 'socket'
 
 import { WidthContainer } from 'components/layout'
 

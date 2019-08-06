@@ -1,8 +1,8 @@
 {
-  "name": "borscht-web",
+  "name": "swaps-web",
   "version": "1.0.0",
-  "description": "Borscht",
-  "repository": "https://github.com/pavelivanov/borscht-web.git",
+  "description": "Swaps Web",
+  "repository": "https://github.com/blockchainhack2019/swaps-web.git",
   "author": "Pavel Ivanov <grammka@gmail.com>",
   "license": "MIT",
   "private": true,
@@ -19,7 +19,8 @@
     "formular": "^1.0.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-router-dom": "^5.0.1"
+    "react-router-dom": "^5.0.1",
+    "socket.io-client": "^2.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.3.4",
