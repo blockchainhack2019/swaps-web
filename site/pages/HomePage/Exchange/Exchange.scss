@@ -2,7 +2,6 @@
   width: 800px;
   display: flex;
   position: relative;
-  margin-top: 100px;
   box-shadow: rgba(#000, 0.2) 10px 10px;
 }
 
@@ -20,13 +19,23 @@
   width: 44px;
   height: 44px;
   position: absolute;
-  left: 320px;
+  left: 358px;
   top: 50%;
   margin-top: -20px;
   z-index: 10;
   background-color: #202442;
   user-select: none;
   cursor: pointer;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+
+  &:active {
+    transition: transform 0.13s ease;
+    transform: scale(1.15);
+  }
 
   img {
     position: absolute;
@@ -42,6 +51,7 @@
 
 .from {
   width: 38%;
+  padding-right: 80px;
 }
 
 .to {
@@ -62,4 +72,13 @@
   letter-spacing: 1.2px;
   font-weight: 600;
   color: #fff;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+
+  &:active {
+    transform: scale(1.15);
+  }
 }

@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import Form from 'formular'
 
 import Card from './Card/Card'
@@ -14,11 +14,11 @@ const form = new Form({
   fields: {
     from: {
       validate: [],
-      value: 100,
+      value: 10,
     },
     to: {
       validate: [],
-      value: (100 / exchangeRate).toFixed(5),
+      value: (10 / exchangeRate).toFixed(5),
     },
   }
 })
@@ -33,6 +33,45 @@ const Exchange = () => {
       currency: 'BTC',
     },
   })
+
+  useEffect(() => {
+    const handleFromChange = (value) => {
+      if (!form.fields.from.ignoreChange) {
+        form.fields.to.ignoreChange = true
+        form.fields.to.set((value / exchangeRate).toFixed(5))
+      }
+      else {
+        form.fields.to.ignoreChange = false
+      }
+    }
+
+    const handleToChange = (value) => {
+      if (!form.fields.to.ignoreChange) {
+        form.fields.from.ignoreChange = true
+        form.fields.from.set((value * exchangeRate).toFixed(5))
+      }
+      else {
+        form.fields.from.ignoreChange = false
+      }
+    }
+
+    const handleFocus = () => {
+      form.fields.from.ignoreChange = false
+      form.fields.to.ignoreChange = false
+    }
+
+    form.fields.from.on('change', handleFromChange)
+    form.fields.to.on('change', handleToChange)
+    form.fields.from.on('focus', handleFocus)
+    form.fields.to.on('focus', handleFocus)
+
+    return () => {
+      form.fields.from.off('change', handleFromChange)
+      form.fields.to.off('change', handleToChange)
+      form.fields.from.off('focus', handleFocus)
+      form.fields.to.off('focus', handleFocus)
+    }
+  }, [ exchangeRate ])
 
   const handleSwapClick = useCallback(() => {
     setState(({ exchangeRate, from, to }) => {

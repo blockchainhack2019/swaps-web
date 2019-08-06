@@ -2,11 +2,11 @@ import React from 'react'
 
 import { WidthContainer } from 'components/layout'
 
-import './App.scss'
+import s from './App.scss'
 
 
 const App = ({ children }) => (
-  <WidthContainer>
+  <WidthContainer className={s.app}>
     {children}
   </WidthContainer>
 )

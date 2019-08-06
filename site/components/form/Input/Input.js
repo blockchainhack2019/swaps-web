@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useCallback, useEffect } from 'react'
+import React, { Fragment, useRef, useState, useCallback, useEffect } from 'react'
 import { FieldError } from 'components/form'
 import cx from 'classnames'
 
@@ -6,9 +6,12 @@ import s from './Input.scss'
 
 
 const Input = ({ className, field, label, type }) => {
+  const ref = useRef()
   const [ _, forceRefresh ] = useState(0)
 
   useEffect(() => {
+    field.setRef(ref.current)
+
     const refresh = () => {
       forceRefresh((v) => ++v)
     }
@@ -17,10 +20,11 @@ const Input = ({ className, field, label, type }) => {
     field.on('validate', refresh)
 
     return () => {
+      field.unsetRef()
       field.off('change', refresh)
       field.off('validate', refresh)
     }
-  }, [ field ])
+  }, [])
 
   const handleChange = useCallback((event) => {
     field.set(event.target.value)
@@ -29,6 +33,7 @@ const Input = ({ className, field, label, type }) => {
   return (
     <Fragment>
       <input
+        ref={ref}
         className={cx(s.input, className)}
         type={type}
         value={field.value}
