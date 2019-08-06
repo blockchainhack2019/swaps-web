@@ -40,6 +40,12 @@ input[type=number] {
   -moz-appearance:textfield; /* Firefox */
 }
 
+input:invalid,
+input:-moz-submit-invalid,
+input:required {
+  box-shadow: none;
+}
+
 
 .app {
   position: relative;

@@ -21,6 +21,10 @@ const OrderBook = () => {
     socket.on('new order', (order) => {
       setOrders((orders) => [ ...orders, order ])
     })
+
+    socket.on('user disconnected', ({ orders: orderIds }) => {
+      setOrders((orders) => orders.filter(({ id }) => !orderIds.includes(id)))
+    })
   }, [])
 
   const filteredOrders = useMemo(() => orders.filter((order) => (
@@ -41,8 +45,8 @@ const OrderBook = () => {
         </thead>
         <tbody>
         {
-          filteredOrders.map(({ sellAmount, buyAmount }, index) => (
-            <tr key={index} className={s.item}>
+          filteredOrders.map(({ id, sellAmount, buyAmount }) => (
+            <tr key={id} className={s.item}>
               <td>{sellAmount}</td>
               <td>{buyAmount}</td>
               <td>{(sellAmount / buyAmount).toFixed(7)}</td>
