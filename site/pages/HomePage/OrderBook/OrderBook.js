@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useMemo } from 'react'
+import { useConnect } from 'store'
 import socket from 'socket'
 
 import s from './OrderBook.scss'
 
 
 const OrderBook = () => {
-  const [ orders, setOrders ] = useState([])
+  const { sellCurrency, buyCurrency } = useConnect({
+    sellCurrency: 'exchange.sellCurrency',
+    buyCurrency: 'exchange.buyCurrency',
+  })
 
-  const sellCurrency = 'QTUM'
-  const buyCurrency = 'BTC'
+  const [ orders, setOrders ] = useState([])
 
   useEffect(() => {
     socket.on('login', ({ orders }) => {

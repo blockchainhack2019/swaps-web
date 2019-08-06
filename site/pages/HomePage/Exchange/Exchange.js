@@ -1,4 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
+import { useConnect, useReducers } from 'store'
+import { useWillMount } from 'hooks'
 import Form from 'formular'
 import socket from 'socket'
 
@@ -9,26 +11,27 @@ import s from './Exchange.scss'
 import swapIcon from './images/swap.svg'
 
 
-const exchangeRate = 3819.93
-
 const form = new Form({
   fields: {
-    sellAmount: {
-      validate: [],
-      value: 10,
-    },
-    buyAmount: {
-      validate: [],
-      value: (10 / exchangeRate).toFixed(5),
-    },
+    sellAmount: [],
+    buyAmount: [],
   }
 })
 
 const Exchange = () => {
-  const [ state, setState ] = useState({
-    exchangeRate,
-    sellCurrency: 'QTUM',
-    buyCurrency: 'BTC',
+  const { exchangeRate, sellCurrency, buyCurrency } = useConnect({
+    exchangeRate: 'exchange.exchangeRate',
+    sellCurrency: 'exchange.sellCurrency',
+    buyCurrency: 'exchange.buyCurrency',
+  })
+
+  const { exchange } = useReducers()
+
+  useWillMount(() => {
+    form.setValues({
+      sellAmount: 10,
+      buyAmount: (10 / exchangeRate).toFixed(5),
+    })
   })
 
   useEffect(() => {
@@ -74,44 +77,40 @@ const Exchange = () => {
   }, [ exchangeRate ])
 
   const handleSwapClick = useCallback(() => {
-    setState(({ exchangeRate, sellCurrency, buyCurrency }) => ({
+    exchange.update({
       exchangeRate: 1 / exchangeRate,
       sellCurrency: buyCurrency,
       buyCurrency: sellCurrency,
-    }))
+    })
 
     form.setValues({
       sellAmount: form.fields.buyAmount.value,
       buyAmount: form.fields.sellAmount.value,
     })
-  }, [])
+  }, [ exchangeRate, sellCurrency, buyCurrency ])
 
   const handleSubmit = useCallback(() => {
     form.submit()
       .then(({ sellAmount, buyAmount }) => {
-        const { sellCurrency, buyCurrency } = state
-
         socket.placeOrder({
           sellCurrency,
           sellAmount: Number(sellAmount),
           buyCurrency,
           buyAmount: Number(buyAmount),
         })
-
-        form.unsetValues()
       })
-  }, [ state ])
+  }, [ sellCurrency, buyCurrency ])
 
-  const rate = state.exchangeRate.toFixed(8).replace(/0+$/, '')
+  const rate = exchangeRate.toFixed(8).replace(/0+$/, '')
 
   return (
     <div className={s.exchange}>
-      <div className={s.rate}>1 {state.buyCurrency} = {rate} {state.sellCurrency}</div>
+      <div className={s.rate}>1 {buyCurrency} = {rate} {sellCurrency}</div>
       <div className={s.swapButton} onClick={handleSwapClick}>
         <img src={swapIcon} />
       </div>
-      <Card className={s.from} field={form.fields.sellAmount} currency={state.sellCurrency} />
-      <Card className={s.to} field={form.fields.buyAmount} currency={state.buyCurrency} secondary />
+      <Card className={s.from} field={form.fields.sellAmount} currency={sellCurrency} />
+      <Card className={s.to} field={form.fields.buyAmount} currency={buyCurrency} secondary />
       <button className={s.submitButton} onClick={handleSubmit}>Place Order</button>
     </div>
   )

@@ -16,11 +16,13 @@ const Input = ({ className, field, label, type }) => {
       forceRefresh((v) => ++v)
     }
 
+    field.on('unset', refresh)
     field.on('change', refresh)
     field.on('validate', refresh)
 
     return () => {
       field.unsetRef()
+      field.off('unset', refresh)
       field.off('change', refresh)
       field.off('validate', refresh)
     }
