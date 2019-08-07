@@ -1,7 +1,7 @@
 import React from 'react'
 import store from 'redux/store'
 import { StoreContext } from 'store'
-import { BrowserRouter as Router } from 'react-router-dom'
+import { HashRouter as Router } from 'react-router-dom'
 
 
 const Root = ({ routes }) => (

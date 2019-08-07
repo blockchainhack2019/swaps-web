@@ -18,22 +18,22 @@ const App = ({ children }) => {
   useEffect(() => {
     socket.on('login', ({ id }) => {
       setPeerId(id)
+    })
 
-      const btcAccount = btc.login()
-      const ethAccount = eth.login()
-      const qtumWallet = qtum.login()
+    const btcAccount = btc.login()
+    const ethAccount = eth.login()
+    const qtumWallet = qtum.login()
 
-      user.updateAccounts({
-        btc: {
-          address: btcAccount.getAddress(),
-        },
-        eth: {
-          address: ethAccount.address,
-        },
-        qtum: {
-          address: qtumWallet.address,
-        },
-      })
+    user.updateAccounts({
+      btc: {
+        address: btcAccount.getAddress(),
+      },
+      eth: {
+        address: ethAccount.address,
+      },
+      qtum: {
+        address: qtumWallet.address,
+      },
     })
   }, [])
 

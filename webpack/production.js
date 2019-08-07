@@ -1,7 +1,6 @@
 import webpack from 'webpack'
 import basePath from 'base-path'
 import TerserPlugin from 'terser-webpack-plugin'
-import AssetsPlugin from 'assets-webpack-plugin'
 import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 
@@ -29,13 +28,6 @@ webpackConfig.plugins.push(
   new MiniCssExtractPlugin({
     filename: 'css/[name].[contenthash:8].css',
   }),
-  new AssetsPlugin({
-    path: output,
-    filename: 'assets.json',
-    fullPath: false,
-    update: true,
-    prettyPrint: true,
-  }),
 )
 
 webpackConfig.optimization = {
@@ -58,8 +50,24 @@ webpackConfig.optimization = {
   },
   minimizer: [
     new TerserPlugin({
+      cache: true,
       sourceMap: true,
       parallel: 4,
+      terserOptions: {
+        mangle: {
+          reserved: [
+            'Buffer',
+            'BigInteger',
+            'ECPubKey',
+            'ECKey',
+            'ECPair',
+            'Point',
+            'HDNode',
+            'sha512_asm',
+            'asm',
+          ],
+        },
+      },
     }),
     new OptimizeCSSAssetsPlugin(),
   ],

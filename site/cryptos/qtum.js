@@ -9,8 +9,6 @@ const getWalletInfo = () => {
   const publicAddress = wallet.address
   const privateKey    = wallet.toWIF()
 
-  localStorage.setItem('qtum:privateKey', privateKey)
-
   return {
     privateKey,
     address: publicAddress,
@@ -22,6 +20,8 @@ const createWallet = () => {
   const password  = 'superstrong'
 
   wallet = network.fromMnemonic(mnemonic, password)
+
+  localStorage.setItem('qtum:privateKey', wallet.toWIF())
 
   return wallet
 }
