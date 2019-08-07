@@ -31,7 +31,7 @@ compiler.run((err, stats) => {
     process.exit(1)
   }
   else if (warnings && warnings.length) {
-    // debug(chalk.yellow(jsonStats.warnings))
+    debug(chalk.yellow(jsonStats.warnings))
   }
 
   debug('All done - everything is good to go.')

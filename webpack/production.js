@@ -20,15 +20,14 @@ webpackConfig.devtool = 'source-map'
 
 webpackConfig.output = {
   path: output,
-  filename: 'js/[name].[chunkhash].js',
-  chunkFilename: 'js/[id].[chunkhash].chunk.js',
+  filename: 'js/[name].[contenthash:8].js',
   publicPath: '/',
 }
 
 webpackConfig.plugins.push(
   new webpack.DefinePlugin(globals),
   new MiniCssExtractPlugin({
-    filename: 'css/[name].[contenthash].css',
+    filename: 'css/[name].[contenthash:8].css',
   }),
   new AssetsPlugin({
     path: output,
@@ -42,12 +41,12 @@ webpackConfig.plugins.push(
 webpackConfig.optimization = {
   minimize: true,
   splitChunks: {
-    maxAsyncRequests: 1,
     cacheGroups: {
       vendor: {
-        test: /node_modules|local_modules/,
+        test: /local_modules|node_modules/,
         name: 'vendor',
-        enforce: true,
+        chunks: 'all',
+        priority: 1,
       },
       styles: {
         test: /\.s?css$/,

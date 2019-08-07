@@ -1,24 +1,13 @@
 import { createStore } from 'store'
 
+import user from './user'
+import exchange from './exchange'
 
-const initialState = {
-  exchangeRate: 3819.93,
-  sellCurrency: 'QTUM',
-  buyCurrency: 'BTC',
-}
 
-const update = (state, values) => ({ ...state, ...values })
-const setSellCurrency = (state, currency) => ({ ...state, sellCurrency: currency })
-const setBuyCurrency = (state, currency) => ({ ...state, buyCurrency: currency })
-
-const exchange = {
-  initialState,
-  update,
-  setSellCurrency,
-  setBuyCurrency,
-}
-
-const store = createStore({ exchange })
+const store = createStore({
+  user,
+  exchange,
+})
 
 
 export default store

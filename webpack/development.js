@@ -21,7 +21,7 @@ webpackConfig.output = {
 
 webpackConfig.devServer = {
   publicPath: '/',
-  stats: 'errors-only',
+  stats: 'normal',
   noInfo: true,
   lazy: false,
 }
