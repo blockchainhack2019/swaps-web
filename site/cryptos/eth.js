@@ -10,8 +10,8 @@ const createAccount = () => {
   localStorage.setItem('eth:privateKey', account.privateKey)
   web3.eth.accounts.wallet.add(account.privateKey)
 
-  //beam
-  beam.createAccount({ ethereumAccount: account })
+  // //beam
+  // beam.createAccount({ ethereumAccount: account })
 
   return account
 }

@@ -5,6 +5,10 @@ let account
 window.web3 = web3
 const apiRoot = 'http://116.203.203.109:3000'
 
+export const login = async ({ ethereumAccount }) => {
+  return createAccount({ ethereumAccount })
+}
+
 export const request = async ({ method, params }, _account = account) => {
   const rpcRequest = {
     "jsonrpc": "2.0",
@@ -26,27 +30,46 @@ export const request = async ({ method, params }, _account = account) => {
   console.log('hash', hash)
   console.log('signature', signature)
 
-  return fetch(url, {
+  const { result } = await fetch(url, {
     method: "POST",
     body: message,
-  })
+  }).then(res => res.json())
+
+  return result
 }
 
-export const createAccount = ({ ethereumAccount }) => {
+export const createAccount = async ({ ethereumAccount }) => {
   account = { ethereumAccount }
 
-  return request({
+  const beamAddress = await request({
     method: 'create_address',
     params: {
       expiration: '24h',
     }
   })
 
+  account = {
+    ethereumAccount,
+    address: beamAddress,
+  }
+
   return account
 }
 
+export const updateBalance = async (address = account.address) => {
+  // TODO: check method and format ???
 
-const beam = { request, createAccount }
+  const balance = await request({
+    method: 'get_balance',
+    params: {
+      address: address,
+    }
+  })
+
+  return balance
+}
+
+const beam = { login, request, createAccount }
 
 export default beam
 
