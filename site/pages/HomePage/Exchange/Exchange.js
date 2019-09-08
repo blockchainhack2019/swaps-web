@@ -92,7 +92,7 @@ const Exchange = () => {
   const handleSubmit = useCallback(() => {
     form.submit()
       .then(({ sellAmount, buyAmount }) => {
-        socket.placeOrder({
+        socket.emit('place order', {
           sellCurrency,
           sellAmount: Number(sellAmount),
           buyCurrency,

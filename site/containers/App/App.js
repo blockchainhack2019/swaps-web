@@ -24,10 +24,10 @@ const App = ({ children }) => {
       setPeerId(id)
     })
 
-    const btcAccount = btc.login()
-    const ethAccount = eth.login()
-    const qtumWallet = qtum.login()
-    const beamWallet = await beam.login({ ethereumAccount: ethAccount })
+    const btcAccount  = btc.login()
+    const ethAccount  = eth.login()
+    const qtumAccount = qtum.login()
+    const beamWallet  = await beam.login({ ethereumAccount: ethAccount })
 
     user.updateAccounts({
       btc: {
@@ -37,7 +37,7 @@ const App = ({ children }) => {
         address: ethAccount.address,
       },
       qtum: {
-        address: qtumWallet.address,
+        address: qtumAccount.address,
       },
       beam: {
         address: beamWallet.address,

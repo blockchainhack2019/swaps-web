@@ -3,13 +3,17 @@ import axios from 'axios'
 
 
 const network = bitcoin.networks.testnet
+let account
+
 
 const createAccount = () => {
   const privateKey = bitcoin.ECPair.makeRandom({ network }).toWIF()
 
   localStorage.setItem('btc:privateKey', privateKey)
 
-  return restoreAccount(privateKey)
+  account = restoreAccount(privateKey)
+
+  return account
 }
 
 const restoreAccount = (privateKey) => {
@@ -23,8 +27,14 @@ const login = () => {
     return createAccount()
   }
 
-  return restoreAccount(privateKey)
+  account = restoreAccount(privateKey)
+
+  return account
 }
+
+const getAccount = () => account
+
+const getAccountPublicKey = () => getPublicKey(account)
 
 const getPublicKey = (account) => account.getPublicKeyBuffer().toString('hex')
 
@@ -49,14 +59,12 @@ const broadcastTx = (txRaw) =>
 
 
 export default {
+  network,
   login,
+  getAccount,
+  getAccountPublicKey,
   getPublicKey,
   fetchBalance,
   fetchUnspents,
   broadcastTx,
-}
-
-export {
-  bitcoin,
-  network,
 }

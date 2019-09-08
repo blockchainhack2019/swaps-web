@@ -34,6 +34,8 @@ const login = () => {
   return restoreAccount(privateKey)
 }
 
+const getAccount = () => account
+
 const getBalance = () =>
   web3.eth.getBalance(account.address)
     .then((amount) => web3.utils.fromWei(amount))
@@ -45,6 +47,7 @@ const sendMoney = async (to, amount) => {
 
 export default {
   login,
+  getAccount,
   getBalance,
   sendMoney,
 }

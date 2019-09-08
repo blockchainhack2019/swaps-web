@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { useConnect } from 'store'
 import socket from 'socket'
 
 import Avatar from 'components/Avatar/Avatar'
+import Table from 'components/Table/Table'
 
 import s from './OrderBook.scss'
 
@@ -29,6 +30,10 @@ const OrderBook = () => {
     })
   }, [])
 
+  const handleSwapClick = useCallback((id) => {
+    socket.emit('request swap', { id })
+  }, [])
+
   const filteredOrders = useMemo(() => orders.filter((order) => (
     order.sellCurrency === sellCurrency
     && order.buyCurrency === buyCurrency
@@ -36,32 +41,21 @@ const OrderBook = () => {
 
   return (
     <div className={s.orderBook}>
-      <table className={s.items}>
-        <thead>
-        <tr>
-          <th />
-          <th>Sell <span>{sellCurrency}</span></th>
-          <th>Buy <span>{buyCurrency}</span></th>
-          <th>Rate</th>
-          <th />
-        </tr>
-        </thead>
-        <tbody>
-        {
-          filteredOrders.map(({ id, sellAmount, buyAmount, owner }) => (
-            <tr key={id} className={s.item}>
-              <td><Avatar className={s.avatar} value={owner} /></td>
-              <td>{sellAmount}</td>
-              <td>{buyAmount}</td>
-              <td>{(sellAmount / buyAmount).toFixed(7)}</td>
-              <td>
-                <div className={s.buyButton}>Exchange</div>
-              </td>
-            </tr>
-          ))
-        }
-        </tbody>
-      </table>
+      <Table
+        titles={[ '', `Sell <span>${sellCurrency}</span>`, `Buy <span>${buyCurrency}</span>`, 'Rate', '' ]}
+        data={filteredOrders}
+        renderRow={({ id, sellAmount, buyAmount, owner }) => (
+          <Table.Row key={id}>
+            <td><Avatar className={s.avatar} value={owner} /></td>
+            <td>{sellAmount}</td>
+            <td>{buyAmount}</td>
+            <td>{(sellAmount / buyAmount).toFixed(7)}</td>
+            <td>
+              <div className={s.button} onClick={() => handleSwapClick(id)}>Swap!</div>
+            </td>
+          </Table.Row>
+        )}
+      />
     </div>
   )
 }

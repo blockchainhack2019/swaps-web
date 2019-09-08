@@ -9,6 +9,7 @@ import s from './Header.scss'
 const menu = [
   { title: 'Exchange', link: '/exchange' },
   { title: 'Wallets', link: '/wallets' },
+  { title: 'Swap Requests', link: '/swap-requests' },
 ]
 
 const Header = () => (

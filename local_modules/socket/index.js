@@ -2,7 +2,7 @@ import io from 'socket.io-client'
 
 
 let id
-const socket = io(process.env.NODE_ENV === 'development' ? 'http://localhost:3060' : 'http://dribbbles.ru')
+const socket = io(process.env.NODE_ENV === 'development' ? 'http://localhost:3060' : 'http://116.203.203.109:3060')
 const myEvents = [ 'connect', 'disconnect', 'login' ]
 
 const on = (event, callback) => {
@@ -51,22 +51,12 @@ const sendPrivateMessage = (to, message) => {
   socket.emit('message', { to, message })
 }
 
-/**
- *
- * @param {Object} order
- * @param {string} order.sellCurrency
- * @param {number} order.sellAmount
- * @param {string} order.buyCurrency
- * @param {number} order.buyAmount
- */
-const placeOrder = (order) => {
-  socket.emit('place order', order)
-}
+const emit = socket.emit.bind(socket)
 
 
 export default {
   on,
+  emit,
   sendMessage,
   sendPrivateMessage,
-  placeOrder,
 }

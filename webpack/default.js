@@ -31,6 +31,9 @@ const webpackConfig = {
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: basePath('site/index.html'),
+      templateParameters: {
+        web3Path: process.env.NODE_ENV === 'development' ? 'assets/web3.min.js' : 'https://cdn.jsdelivr.net/npm/web3-min-js@1.0.0/web3.min.js'
+      },
       inject: 'body',
     }),
   ],

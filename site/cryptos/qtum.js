@@ -2,12 +2,12 @@ import { networks, generateMnemonic } from 'qtumjs-wallet'
 
 
 const network = networks.testnet
-let wallet
+let account
 
 
 const getWalletInfo = () => {
-  const publicAddress = wallet.address
-  const privateKey    = wallet.toWIF()
+  const publicAddress = account.address
+  const privateKey    = account.toWIF()
 
   return {
     privateKey,
@@ -19,17 +19,17 @@ const createWallet = () => {
   const mnemonic  = generateMnemonic()
   const password  = 'superstrong'
 
-  wallet = network.fromMnemonic(mnemonic, password)
+  account = network.fromMnemonic(mnemonic, password)
 
-  localStorage.setItem('qtum:privateKey', wallet.toWIF())
+  localStorage.setItem('qtum:privateKey', account.toWIF())
 
-  return wallet
+  return account
 }
 
 const restoreWallet = (privateKey) => {
-  wallet = network.fromPrivateKey(privateKey)
+  account = network.fromPrivateKey(privateKey)
 
-  return wallet
+  return account
 }
 
 const login = () => {
@@ -42,14 +42,16 @@ const login = () => {
   return restoreWallet(privateKey)
 }
 
+const getAccount = () => account
+
 const getBalance = async () => {
-  const info = await wallet.getInfo()
+  const info = await account.getInfo()
 
   return info.balance
 }
 
 const sendMoney = async (to, amount) => {
-  const { txid: transactionId } = await wallet.send(to, amount * 1e8, {
+  const { txid: transactionId } = await account.send(to, amount * 1e8, {
     feeRate: 1000,
   })
 
@@ -59,6 +61,7 @@ const sendMoney = async (to, amount) => {
 
 export default {
   login,
+  getAccount,
   getBalance,
   sendMoney,
   getWalletInfo,
