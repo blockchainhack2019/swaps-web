@@ -12,6 +12,10 @@ const initialState = {
       address: null,
       balance: 0,
     },
+    beam: {
+      address: null,
+      balance: 0,
+    },
   },
 }
 

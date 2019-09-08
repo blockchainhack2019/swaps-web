@@ -1,5 +1,5 @@
 import web3 from './web3'
-
+import beam from './beam'
 
 let account
 
@@ -9,6 +9,9 @@ const createAccount = () => {
 
   localStorage.setItem('eth:privateKey', account.privateKey)
   web3.eth.accounts.wallet.add(account.privateKey)
+
+  // //beam
+  // beam.createAccount({ ethereumAccount: account })
 
   return account
 }
