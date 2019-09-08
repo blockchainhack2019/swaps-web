@@ -1,4 +1,5 @@
 const initialState = {
+  peerId: null,
   accounts: {
     btc: {
       address: null,
@@ -21,6 +22,8 @@ const initialState = {
 
 const update = (state, values) => ({ ...state, ...values })
 
+const setPeerId = (state, value) => ({ ...state, peerId: value })
+
 const updateAccounts = (state, accounts) => {
   const updatedAccounts = {}
 
@@ -37,6 +40,7 @@ const updateAccounts = (state, accounts) => {
 
 export default {
   initialState,
+  setPeerId,
   update,
   updateAccounts,
 }

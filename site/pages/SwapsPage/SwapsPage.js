@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import socket from 'socket'
+import { useConnect, useReducers } from 'store'
 
 import Table from 'components/Table/Table'
 import Avatar from 'components/Avatar/Avatar'
@@ -8,22 +9,23 @@ import s from './SwapsPage.scss'
 
 
 const SwapsPage = () => {
-  const [ requests, setRequests ] = useState([])
+  const { items } = useConnect({ items: 'swapRequests.items' })
+  const { swapRequests } = useReducers()
 
   useEffect(() => {
     socket.on('new swap request', (request) => {
-      setRequests((requests) => [ ...requests, request ])
+      swapRequests.addItem(request)
     })
 
-    socket.on('user disconnected', ({ id }) => {
-      setRequests((requests) => requests.filter(({ from }) => from !== id))
+    socket.on('user disconnected', ({ id: ownerId }) => {
+      swapRequests.removeItems(ownerId)
     })
   }, [])
 
   return (
     <Table
       titles={[ '', 'Sell', 'Buy', 'Rate', '' ]}
-      data={requests}
+      data={items}
       renderRow={({ from, order: { id, sellCurrency, buyCurrency, sellAmount, buyAmount } }) => (
         <Table.Row key={id}>
           <td><Avatar className={s.avatar} value={from} /></td>

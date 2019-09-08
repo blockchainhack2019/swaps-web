@@ -9,7 +9,8 @@ import s from './OrderBook.scss'
 
 
 const OrderBook = () => {
-  const { sellCurrency, buyCurrency } = useConnect({
+  const { peerId, sellCurrency, buyCurrency } = useConnect({
+    peerId: 'user.peerId',
     sellCurrency: 'exchange.sellCurrency',
     buyCurrency: 'exchange.buyCurrency',
   })
@@ -44,17 +45,28 @@ const OrderBook = () => {
       <Table
         titles={[ '', `Sell <span>${sellCurrency}</span>`, `Buy <span>${buyCurrency}</span>`, 'Rate', '' ]}
         data={filteredOrders}
-        renderRow={({ id, sellAmount, buyAmount, owner }) => (
-          <Table.Row key={id}>
-            <td><Avatar className={s.avatar} value={owner} /></td>
-            <td>{sellAmount}</td>
-            <td>{buyAmount}</td>
-            <td>{(sellAmount / buyAmount).toFixed(7)}</td>
-            <td>
-              <div className={s.button} onClick={() => handleSwapClick(id)}>Swap!</div>
-            </td>
-          </Table.Row>
-        )}
+        renderRow={({ id, sellAmount, buyAmount, owner }) => {
+          const isMyOrder = owner === peerId
+
+          console.log(111, owner)
+          console.log(222, peerId)
+
+          return (
+            <Table.Row key={id}>
+              <td><Avatar className={s.avatar} value={owner} /></td>
+              <td>{sellAmount}</td>
+              <td>{buyAmount}</td>
+              <td>{(sellAmount / buyAmount).toFixed(7)}</td>
+              <td>
+                {
+                  !isMyOrder && (
+                    <div className={s.button} onClick={() => handleSwapClick(id)}>Swap!</div>
+                  )
+                }
+              </td>
+            </Table.Row>
+          )
+        }}
       />
     </div>
   )

@@ -1,0 +1,125 @@
+.container {
+  position: relative;
+  transition: margin-top 0.1s linear 0.4s, margin-bottom 0.1s linear 0.4s;
+
+  &[data-position='topLeft'],
+  &[data-position='topRight'] {
+    margin-top: 0;
+  }
+
+  &[data-position='bottomLeft'],
+  &[data-position='bottomRight'] {
+    margin-bottom: 0;
+  }
+
+  &.removed {
+    overflow: hidden;
+    transition: margin-top 0.1s linear 0s, margin-bottom 0.1s linear 0s;
+
+    &[data-position='topLeft'],
+    &[data-position='topRight'] {
+      margin-top: 0 !important;
+    }
+
+    &[data-position='bottomLeft'],
+    &[data-position='bottomRight'] {
+      margin-bottom: 0 !important;
+    }
+  }
+}
+
+
+.notification {
+  position: relative;
+  color: #000;
+  background-color: #fff;
+  opacity: 0;
+
+  &.mounted {
+    opacity: 1 !important;
+    transition: all 0.4s linear;
+
+    &[data-position='topLeft'],
+    &[data-position='topRight'] {
+      margin-top: 0 !important;
+    }
+
+    &[data-position='bottomLeft'],
+    &[data-position='bottomRight'] {
+      margin-bottom: 0 !important;
+    }
+  }
+
+  &.removed {
+    opacity: 0.5 !important;
+
+    &[data-position='topLeft'],
+    &[data-position='topRight'] {
+      margin-top: -100% !important;
+    }
+
+    &[data-position='bottomLeft'],
+    &[data-position='bottomRight'] {
+      margin-bottom: -100% !important;
+    }
+  }
+
+  &.info {
+    border-color: rgba(54, 156, 199, 0.9);
+  }
+
+  &.success {
+    border-color: rgba(94, 164, 0, 0.9);
+  }
+
+  &.warning {
+    border-color: rgba(234, 167, 3, 0.9);
+  }
+
+  &.error {
+    border-color: rgba(208, 20, 20, 0.9);
+  }
+}
+
+.closeButton {
+  position: absolute;
+  opacity: 0.4;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.container {
+  margin-right: 5px;
+  margin-left: 5px;
+
+  &.mounted {
+    &[data-position='topLeft'],
+    &[data-position='topRight'] {
+      margin-top: 10px;
+    }
+
+    &[data-position='bottomLeft'],
+    &[data-position='bottomRight'] {
+      margin-bottom: 10px;
+    }
+  }
+}
+
+.closeButton {
+  top: 10px;
+  right: 10px;
+  width: 12px;
+  height: 12px;
+}
+
+.notification {
+  width: 300px;
+  font-size: 14px;
+  box-shadow: rgba(0, 0, 0, 0.4) 0 2px 10px;
+}
+
+.content {
+  padding: 15px 25px 15px 15px;
+}

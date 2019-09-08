@@ -15,7 +15,7 @@ const routes = (
     <Route path="/exchange" exact component={HomePage} />
     <Route path="/wallets" exact component={WalletsPage} />
     <Route path="/swap-requests" exact component={SwapsPage} />
-    <Route path="/swap/:id" exact component={SwapPage} />
+    <Route path="/swap/:orderId" exact component={SwapPage} />
   </App>
 )
 
